@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "566873741825",
+    "project_id": "mynotes-ls",
+    "storage_bucket": "mynotes-ls.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:566873741825:android:49f8218d444e3f9686fe00",
+        "android_client_info": {
+          "package_name": "com.forty.mynotes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8GoO1CxyW50HcKpztUO3hKWeYEom9dTk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
