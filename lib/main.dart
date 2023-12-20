@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +21,7 @@ void main() {
     routes: {
       '/login/': (context) => const LoginView(),
       '/register/': (context) => const RegisterView(),
+      '/notes/': (context) => const NotesView(),
     },
   ));
 }
@@ -42,7 +41,7 @@ class HomePage extends StatelessWidget {
             final user = FirebaseAuth.instance.currentUser;
             if (user != null) {
               if (user.emailVerified) {
-                print('Hello world');
+                 devtools.log('Hello world');
                 return const NotesView();
               } else {
                 return const VerifyEmailView();
@@ -117,12 +116,12 @@ Future<bool> showLogOutDialog(BuildContext context) {
                 onPressed: () {
                   Navigator.of(context).pop(false);
                 },
-                child: Text('Cancel')),
+                child: const Text('Cancel')),
             TextButton(
                 onPressed: () {
                   Navigator.of(context).pop(true);
                 },
-                child: Text('Log out')),
+                child: const Text('Log out')),
           ],
         );
       }).then((value) => value ?? false);
