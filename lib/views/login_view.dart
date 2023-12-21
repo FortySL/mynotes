@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer' as devtools show log;
 
 import 'package:mynotes/constants/routs.dart';
 
@@ -61,7 +60,6 @@ class _LoginViewState extends State<LoginView> {
                 final userCredential = await FirebaseAuth.instance
                     .signInWithEmailAndPassword(
                         email: email, password: password);
-                devtools.log(userCredential.toString());
                 if (context.mounted) {
                   await Navigator.of(context).pushNamedAndRemoveUntil(
                     notesRoute,
