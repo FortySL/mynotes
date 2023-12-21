@@ -4,6 +4,8 @@ import 'dart:developer' as devtools show log;
 
 import 'package:mynotes/constants/routs.dart';
 
+import '../utilities/show_error_dialog.dart';
+
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
 
@@ -60,17 +62,33 @@ class _LoginViewState extends State<LoginView> {
                     .signInWithEmailAndPassword(
                         email: email, password: password);
                 devtools.log(userCredential.toString());
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  notesRoute,
-                  (route) => false,
-                );
+                if (context.mounted) {
+                  await Navigator.of(context).pushNamedAndRemoveUntil(
+                    notesRoute,
+                    (route) => false,
+                  );
+                }
               } on FirebaseAuthException catch (e) {
                 if (e.code == 'user-not-found') {
-                  devtools.log('User not found');
+                  if (context.mounted) {
+                    await showErrorDialog(context, 'User not found');
+                  }
                 } else if (e.code == 'wrong-password') {
-                  devtools.log('Wrong password');
+                  if (context.mounted) {
+                    await showErrorDialog(context, 'Wrong password');
+                  }
                 } else if (e.code == 'invalid-credential') {
-                  devtools.log('Invalid credentials');
+                  if (context.mounted) {
+                    await showErrorDialog(context, 'Invalid credentials');
+                  }
+                } else {
+                  if (context.mounted) {
+                    await showErrorDialog(context, 'Error: ${e.code}');
+                  }
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  await showErrorDialog(context, 'Error: ${e.toString()}');
                 }
               }
             },
