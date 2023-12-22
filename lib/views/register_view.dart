@@ -1,6 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mynotes/constants/routs.dart';
+import 'package:mynotes/services/auth/auth_exceptions.dart';
+import 'package:mynotes/services/auth/auth_services.dart';
 
 import '../utilities/show_error_dialog.dart';
 
@@ -56,37 +57,34 @@ class _RegisterViewState extends State<RegisterView> {
               final email = _email.text;
               final password = _password.text;
               try {
-                final userCredential = await FirebaseAuth.instance
-                    .createUserWithEmailAndPassword(
-                        email: email, password: password);
-
-                final user = FirebaseAuth.instance.currentUser;
-                await user?.sendEmailVerification();
+                await AuthService.firebase()
+                    .createUser(email: email, password: password);
+                await AuthService.firebase().sendEmailVerification();
                 if (context.mounted) {
                   Navigator.of(context).pushNamed(verifyEmailRoute);
                 }
-              } on FirebaseAuthException catch (e) {
-                if (e.code == 'weak-password') {
-                  if (context.mounted) {
-                    await showErrorDialog(context, 'Weak password');
-                  }
-                } else if (e.code == 'email-already-in-use') {
-                  if (context.mounted) {
-                    await showErrorDialog(context, 'Email already in use');
-                  }
-                } else if (e.code == 'invalid-email') {
-                  if (context.mounted) {
-                    await showErrorDialog(
-                        context, 'This is an invalid email address');
-                  }
-                } else {
-                  if (context.mounted) {
-                    await showErrorDialog(context, 'Error: ${e.code}');
-                  }
-                }
-              } catch (e) {
+              } on WeakPasswordAuthException {
                 if (context.mounted) {
-                  await showErrorDialog(context, 'Error: ${e.toString()}');
+                  await showErrorDialog(context, 'Weak password');
+                }
+              } on EmailAlreadyInUseAuthException {
+                if (context.mounted) {
+                  await showErrorDialog(context, 'Email already in use');
+                }
+              } on InvalidEmailAuthException {
+                if (context.mounted) {
+                  await showErrorDialog(
+                      context, 'This is an invalid email address');
+                }
+              } on GenericAuthException {
+                if (context.mounted) {
+                  await showErrorDialog(
+                      context, 'Error: Authentication error}');
+                }
+              } catch (_) {
+                if (context.mounted) {
+                  await showErrorDialog(
+                      context, 'Error: Authentication error}');
                 }
               }
             },
